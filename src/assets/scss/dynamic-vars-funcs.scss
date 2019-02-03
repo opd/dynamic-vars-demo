@@ -1,0 +1,89 @@
+@function dynamic-value($value, $name) {
+    @if $dynamic-vars == true {
+        @return dynamic-var($name);
+    }
+    @return $value;
+}
+
+@function starts-with($str, $part) {
+  @if type-of($str) != "string" {
+    @return false;
+  }
+  $len: str-length($part);
+  $first-part: str-slice($str, 0, $len);
+  @return $part == $first-part;
+}
+
+@function has-dynamic-arg($args...) {
+  @each $arg in $args {
+    @if starts-with($arg, "dynamic-var") {
+      @return true;
+    }
+  }
+  @return false;
+}
+
+$orig-mix: get-function("mix");
+@function mix($args...) {
+  @if has-dynamic-arg($args...) {
+    @return dynamic-var("mix", $args...);
+  }
+  @return call($orig-mix, $args...);
+}
+
+$orig-darken: get-function("darken");
+@function darken($args...) {
+  @if has-dynamic-arg($args...) {
+    @return dynamic-var("darken", $args...);
+  }
+  @return call($orig-darken, $args...);
+}
+
+$orig-lighten: get-function("lighten");
+@function lighten($args...) {
+  @if has-dynamic-arg($args...) {
+    @return dynamic-var("lighten", $args...);
+  }
+  @return call($orig-lighten, $args...);
+}
+
+$orig-red: get-function("red");
+@function red($args...) {
+  @if has-dynamic-arg($args...) {
+    @return dynamic-var("red", $args...);
+  }
+  @return call($orig-red, $args...);
+}
+
+$orig-green: get-function("green");
+@function green($args...) {
+  @if has-dynamic-arg($args...) {
+    @return dynamic-var("green", $args...);
+  }
+  @return call($orig-green, $args...);
+}
+
+$orig-blue: get-function("blue");
+@function blue($args...) {
+  @if has-dynamic-arg($args...) {
+    @return dynamic-var("blue", $args...);
+  }
+  @return call($orig-blue, $args...);
+}
+
+$orig-rgba: get-function("rgba");
+@function rgba($args...) {
+  @if has-dynamic-arg($args...) {
+    @return dynamic-var("rgba", $args...);
+  }
+  @return call($orig-rgba, $args...);
+}
+
+// Override bootstrap function
+$orig-color-yiq: get-function("color-yiq");
+@function color-yiq($args...) {
+  @if has-dynamic-arg($args...) {
+    @return dynamic-var("color-yiq", $args...);
+  }
+  @return call($orig-color-yiq, $args...);
+}
